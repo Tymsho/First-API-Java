@@ -1,44 +1,64 @@
 package com.first.api.first_api.services;
 
 import com.first.api.first_api.models.Cliente;
+import com.first.api.first_api.dto.ClienteDTO;
 import com.first.api.first_api.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Service // Le indica a Spring que esta clase es un Servicio
+@Service
 public class ClienteService {
 
-    @Autowired // Inyecta el repositorio automáticamente
+    @Autowired
     private ClienteRepository clienteRepository;
 
-    // Obtener todos los clientes (podrías filtrar solo los activos si quisieras)
-    public List<Cliente> obtenerTodos() {
-        return clienteRepository.findAll();
+    // --- MAPEO MANUAL (Entidad a DTO) ---
+    private ClienteDTO convertirADTO(Cliente cliente) {
+        ClienteDTO dto = new ClienteDTO();
+        dto.setId(cliente.getId());
+        dto.setNombre(cliente.getNombre());
+        dto.setApellido(cliente.getApellido());
+        dto.setDniCuit(cliente.getDniCuit());
+        dto.setTelefono(cliente.getTelefono());
+        dto.setEmail(cliente.getEmail());
+        return dto;
     }
 
-    // Buscar un cliente por ID
-    public Optional<Cliente> buscarPorId(Long id) {
-        return clienteRepository.findById(id);
+    // --- MÉTODOS DEL SERVICIO (Devuelven DTOs) ---
+
+    // Obtener solo clientes activos
+    public List<ClienteDTO> obtenerTodosActivos() {
+        return clienteRepository.findAll().stream()
+                .filter(Cliente::isActivo) // Filtramos los que tienen activo=true
+                .map(this::convertirADTO)  // Convertimos cada Cliente a ClienteDTO
+                .collect(Collectors.toList());
     }
 
-    // Crear o actualizar un cliente
-    public Cliente guardarCliente(Cliente cliente) {
-        // Acá podrías agregar lógica, ej: verificar si el DNI ya existe
-        return clienteRepository.save(cliente);
+    // Buscar por ID
+    public Optional<ClienteDTO> buscarPorId(Long id) {
+        return clienteRepository.findById(id)
+                .filter(Cliente::isActivo)
+                .map(this::convertirADTO);
     }
 
-    // Implementación de la BAJA LÓGICA (No usamos el delete() del repositorio)
+    // Guardar (Recibe una Entidad por ahora, pero devuelve el DTO guardado)
+    public ClienteDTO guardarCliente(Cliente cliente) {
+        Cliente clienteGuardado = clienteRepository.save(cliente);
+        return convertirADTO(clienteGuardado);
+    }
+
+    // Baja Lógica (No devuelve nada, pero anula el registro)
     public void bajaLogica(Long id) {
         Optional<Cliente> clienteOpt = clienteRepository.findById(id);
         if (clienteOpt.isPresent()) {
             Cliente cliente = clienteOpt.get();
-            cliente.setActivo(false); // Cambiamos el estado en lugar de borrar
+            cliente.setActivo(false);
             clienteRepository.save(cliente);
         } else {
-            // Más adelante acá lanzaremos una excepción personalizada como pide tu TP
             throw new RuntimeException("Cliente no encontrado con id: " + id);
         }
     }

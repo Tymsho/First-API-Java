@@ -2,6 +2,7 @@ package com.first.api.first_api.services;
 
 import com.first.api.first_api.models.Cliente;
 import com.first.api.first_api.dto.ClienteDTO;
+import com.first.api.first_api.exceptions.ResourceNotFoundException;
 import com.first.api.first_api.repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class ClienteService {
             cliente.setActivo(false);
             clienteRepository.save(cliente);
         } else {
-            throw new RuntimeException("Cliente no encontrado con id: " + id);
+            throw new ResourceNotFoundException("Cliente no encontrado con id: " + id);
         }
     }
 }

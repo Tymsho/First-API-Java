@@ -2,6 +2,7 @@ package com.first.api.first_api.services;
 
 import com.first.api.first_api.models.Poliza;
 import com.first.api.first_api.dto.PolizaDTO;
+import com.first.api.first_api.exceptions.ResourceNotFoundException;
 import com.first.api.first_api.repositories.PolizaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,7 +70,7 @@ public class PolizaService {
             poliza.setActiva(false);
             polizaRepository.save(poliza);
         } else {
-            throw new RuntimeException("Póliza no encontrada");
+            throw new ResourceNotFoundException("Cliente no encontrado con id: " + id);
         }
     }
 }

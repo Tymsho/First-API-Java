@@ -1,7 +1,6 @@
 package com.first.api.first_api.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import java.util.Set;
 
@@ -13,7 +12,6 @@ public class Ramo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre del ramo es obligatorio")
     @Column(unique = true)
     private String nombre; // Ej: Automotor, Vida, Hogar
 

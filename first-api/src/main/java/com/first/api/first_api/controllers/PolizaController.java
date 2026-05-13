@@ -1,7 +1,6 @@
 package com.first.api.first_api.controllers;
 
 import com.first.api.first_api.dto.PolizaDTO;
-import com.first.api.first_api.models.Poliza;
 import com.first.api.first_api.services.PolizaService;
 
 import jakarta.validation.Valid;
@@ -43,8 +42,8 @@ public class PolizaController {
 
     // POST: Crear una nueva póliza
     @PostMapping
-    public ResponseEntity<PolizaDTO> crearPoliza(@Valid @RequestBody Poliza poliza) {
-        PolizaDTO nuevaPoliza = polizaService.guardarPoliza(poliza);
+    public ResponseEntity<PolizaDTO> crearPoliza(@Valid @RequestBody PolizaDTO polizadDTO) {
+        PolizaDTO nuevaPoliza = polizaService.guardarPoliza(polizadDTO);
         return new ResponseEntity<>(nuevaPoliza, HttpStatus.CREATED);
     }
 
@@ -53,5 +52,11 @@ public class PolizaController {
     public ResponseEntity<Void> anularPoliza(@PathVariable Long id) {
         polizaService.anularPoliza(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PolizaDTO> actualizarPoliza(@PathVariable Long id, @Valid @RequestBody PolizaDTO polizaDTO) {
+        PolizaDTO actualizada = polizaService.actualizarPoliza(id, polizaDTO); 
+        return ResponseEntity.ok(actualizada);
     }
 }

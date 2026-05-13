@@ -1,7 +1,6 @@
 package com.first.api.first_api.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.time.LocalDate;
 
@@ -16,9 +15,8 @@ public class Poliza {
     @Column(name = "numero_poliza", unique = true)
     private String numeroPoliza;
 
-    @NotNull
     private LocalDate fechaInicio;
-    @NotNull
+
     private LocalDate fechaFin;
 
     private boolean activa = true;

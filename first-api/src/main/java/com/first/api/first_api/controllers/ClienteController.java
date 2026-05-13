@@ -1,7 +1,6 @@
 package com.first.api.first_api.controllers;
 
 import com.first.api.first_api.dto.ClienteDTO;
-import com.first.api.first_api.models.Cliente;
 import com.first.api.first_api.services.ClienteService;
 
 import jakarta.validation.Valid;
@@ -37,8 +36,8 @@ public class ClienteController {
 
     // POST: Crear un nuevo cliente (recibe un JSON de Cliente, devuelve un ClienteDTO)
     @PostMapping
-    public ResponseEntity<ClienteDTO> crearCliente(@Valid @RequestBody Cliente cliente) {
-        ClienteDTO nuevoCliente = clienteService.guardarCliente(cliente);
+    public ResponseEntity<ClienteDTO> crearCliente(@Valid @RequestBody ClienteDTO clienteDTO) {
+        ClienteDTO nuevoCliente = clienteService.guardarCliente(clienteDTO);
         return new ResponseEntity<>(nuevoCliente, HttpStatus.CREATED);
     }
 
@@ -47,5 +46,11 @@ public class ClienteController {
     public ResponseEntity<Void> darDeBajaCliente(@PathVariable Long id) {
         clienteService.bajaLogica(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ClienteDTO> actualizarCliente(@PathVariable Long id, @Valid @RequestBody ClienteDTO clienteDTO) {
+        ClienteDTO actualizado = clienteService.actualizarCliente(id, clienteDTO);
+        return ResponseEntity.ok(actualizado);
     }
 }

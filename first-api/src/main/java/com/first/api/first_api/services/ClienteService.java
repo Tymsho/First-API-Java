@@ -28,6 +28,17 @@ public class ClienteService {
         dto.setEmail(cliente.getEmail());
         return dto;
     }
+    // --- MAPEO INVERSO (DTO a Entidad) ---
+    private Cliente convertirAEntidad(ClienteDTO dto) {
+        Cliente cliente = new Cliente();
+        // No seteamos el ID porque la base de datos lo genera (o lo buscamos si es un PUT)
+        cliente.setNombre(dto.getNombre());
+        cliente.setApellido(dto.getApellido());
+        cliente.setDniCuit(dto.getDniCuit());
+        cliente.setTelefono(dto.getTelefono());
+        cliente.setEmail(dto.getEmail());
+        return cliente;
+    }
 
     // --- MÉTODOS DEL SERVICIO (Devuelven DTOs) ---
 
@@ -47,7 +58,8 @@ public class ClienteService {
     }
 
     // Guardar (Recibe una Entidad por ahora, pero devuelve el DTO guardado)
-    public ClienteDTO guardarCliente(Cliente cliente) {
+    public ClienteDTO guardarCliente(ClienteDTO clienteDTO) {
+        Cliente cliente = convertirAEntidad(clienteDTO);
         Cliente clienteGuardado = clienteRepository.save(cliente);
         return convertirADTO(clienteGuardado);
     }
@@ -62,5 +74,19 @@ public class ClienteService {
         } else {
             throw new ResourceNotFoundException("Cliente no encontrado con id: " + id);
         }
+    }
+
+    public ClienteDTO actualizarCliente(Long id, ClienteDTO detallesDTO) {
+        Cliente clienteExistente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente no encontrado con id: " + id));
+
+        clienteExistente.setNombre(detallesDTO.getNombre());
+        clienteExistente.setApellido(detallesDTO.getApellido());
+        clienteExistente.setDniCuit(detallesDTO.getDniCuit());
+        clienteExistente.setTelefono(detallesDTO.getTelefono());
+        clienteExistente.setEmail(detallesDTO.getEmail());
+
+        Cliente clienteActualizado = clienteRepository.save(clienteExistente);
+        return convertirADTO(clienteActualizado);
     }
 }

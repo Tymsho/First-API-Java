@@ -43,11 +43,16 @@ public class ClienteService {
     // --- MÉTODOS DEL SERVICIO (Devuelven DTOs) ---
 
     // Obtener solo clientes activos
-    public List<ClienteDTO> obtenerTodosActivos() {
-        return clienteRepository.findAll().stream()
-                .filter(Cliente::isActivo) // Filtramos los que tienen activo=true
-                .map(this::convertirADTO)  // Convertimos cada Cliente a ClienteDTO
-                .collect(Collectors.toList());
+    public List<ClienteDTO> obtenerTodosActivos(String nombre) {
+        List<Cliente> clientes;
+        if (nombre != null && !nombre.isEmpty()) {
+            clientes = clienteRepository.buscarPorNombreYActivo(nombre);
+        } else {
+            clientes = clienteRepository.findAll().stream()
+                    .filter(Cliente::isActivo)
+                    .collect(Collectors.toList());
+        }
+        return clientes.stream().map(this::convertirADTO).collect(Collectors.toList());
     }
 
     // Buscar por ID

@@ -35,3 +35,6 @@ build/
 ### Postman ###
 postman/
 .postman/
+
+### ApiTest ###
+api-test.http

@@ -1,0 +1,91 @@
+### ==========================================
+### 1. SEGURIDAD Y USUARIOS
+### ==========================================
+@token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBtYWlsLmNvbSIsImlhdCI6MTc3ODk0MTg2MywiZXhwIjoxNzc5MDI4MjYzfQ.4OuhAAaWvfFOmkF0v-9PWlMNwbHqod8Seaj9wnwC2ZI
+### Registrar un nuevo usuario
+POST http://localhost:8080/api/usuarios/registro
+Content-Type: application/json
+
+{
+  "email": "productor@seguros.com",
+  "password": "clave123"
+}
+
+### Login (Obtener el JWT)
+# ACORDATE: Copiá el token que te devuelve la respuesta para usarlo abajo
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "productor@seguros.com",
+  "password": "clave123"
+}
+### Login como ADMINISTRADOR (Obtener el JWT nivel Dios)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@mail.com",
+  "password": "admin123"
+}
+
+### ==========================================
+### 2. CLIENTES (Requieren Token)
+### ==========================================
+
+### Crear un Cliente
+POST http://localhost:8080/api/clientes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Carlos",
+  "apellido": "Gomez",
+  "dniCuit": "20112223334",
+  "email": "carlos@mail.com",
+  "telefono": "2922123456"
+}
+
+### Listar todos los clientes
+GET http://localhost:8080/api/clientes
+Authorization: Bearer {{token}}
+
+
+### Probar el Query Param y la Query Personalizada
+# Busca solo los clientes que se llamen "Carlos"
+GET http://localhost:8080/api/clientes?nombre=Carlos
+Authorization: Bearer TU_TOKEN_AQUI
+
+
+### Modificar el Cliente (Asumiendo que Carlos tiene el ID 1)
+PUT http://localhost:8080/api/clientes/1
+Content-Type: application/json
+Authorization: Bearer TU_TOKEN_AQUI
+
+{
+  "nombre": "Carlos Modificado",
+  "apellido": "Gomez",
+  "dniCuit": "20112223334",
+  "email": "carlos_nuevo@mail.com",
+  "telefono": "2922000000"
+}
+
+### Borrar el Cliente (Baja lógica, ID 1)
+DELETE http://localhost:8080/api/clientes/1
+Authorization: Bearer TU_TOKEN_AQUI
+
+
+### ==========================================
+### 3. TEST DE ERRORES (GlobalExceptionHandler)
+### ==========================================
+
+### Forzar error 400 (Email inválido y falta DNI)
+POST http://localhost:8080/api/clientes
+Content-Type: application/json
+Authorization: Bearer TU_TOKEN_AQUI
+
+{
+  "nombre": "Falla",
+  "apellido": "Seguro",
+  "email": "esto-no-es-mail"
+}

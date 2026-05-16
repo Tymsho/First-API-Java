@@ -16,7 +16,7 @@ public class Cliente {
     private String apellido;
 
     @Column(unique = true, name = "dni_cuit")
-    private String dniCuit;
+    private String dniCuit; 
 
     private String telefono;
 

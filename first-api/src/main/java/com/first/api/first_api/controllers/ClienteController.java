@@ -22,8 +22,8 @@ public class ClienteController {
 
     // GET: Listar todos los clientes activos
     @GetMapping
-    public ResponseEntity<List<ClienteDTO>> obtenerClientes() {
-        return ResponseEntity.ok(clienteService.obtenerTodosActivos());
+    public ResponseEntity<List<ClienteDTO>> obtenerClientes(@RequestParam(required = false) String nombre) {
+        return ResponseEntity.ok(clienteService.obtenerTodosActivos(nombre));
     }
 
     // GET: Buscar un cliente por ID

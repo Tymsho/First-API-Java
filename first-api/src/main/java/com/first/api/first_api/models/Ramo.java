@@ -15,6 +15,8 @@ public class Ramo {
     @Column(unique = true)
     private String nombre; // Ej: Automotor, Vida, Hogar
 
+    private boolean activo = true;
+
     @ManyToMany(mappedBy = "ramos")
     private Set<Compania> companias;
 }

@@ -15,6 +15,8 @@ public class Compania {
     @Column(unique = true)
     private String nombre;
 
+    private boolean activo = true;
+    
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "companias_ramos", // Nombre de la tabla intermedia en la BD
